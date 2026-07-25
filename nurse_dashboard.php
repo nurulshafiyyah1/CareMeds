@@ -36,6 +36,25 @@ if ($log_query) {
         $recent_logs[] = $row;
     }
 }
+
+$alerts = [];
+$alerts_query = $conn->query("
+    SELECT s.time, r.resident_name, m.medicine_name
+    FROM schedule s
+    JOIN resident r ON s.resident_ID = r.resident_ID
+    LEFT JOIN medicine m ON s.medicine_ID = m.medicine_ID
+    WHERE s.date = '$db_date'
+    ORDER BY s.time ASC
+");
+if ($alerts_query) {
+    while ($alert = $alerts_query->fetch_assoc()) {
+        $resident_name = $alert['resident_name'] ?? 'Unknown Resident';
+        if (!isset($alerts[$resident_name])) {
+            $alerts[$resident_name] = [];
+        }
+        $alerts[$resident_name][] = $alert;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -61,6 +80,20 @@ if ($log_query) {
         .log-item { padding: 12px; border-radius: 8px; background: #f8fafc; margin-bottom: 10px; font-size: 13px; border-left: 4px solid #cbd5e1; }
         .log-item.given { border-left-color: #22c55e; background: #f0fdf4; }
         .log-item.missed { border-left-color: #ef4444; background: #fef2f2; }
+        .notification-wrapper { position: relative; }
+        .notification-bell { background-color: white; padding: 12px; border-radius: 12px; font-size: 20px; cursor: pointer; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: none; }
+        .bell-badge { position: absolute; top: -5px; right: -5px; background-color: #ef4444; color: white; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 20px; }
+        .notification-dropdown { position: absolute; top: calc(100% + 10px); right: 0; width: min(320px, 90vw); background: white; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12); padding: 12px 0; display: none; z-index: 50; }
+        .notification-dropdown.is-open { display: block; }
+        .notification-header { padding: 0 14px 10px; font-size: 13px; font-weight: 700; color: #1e3d37; border-bottom: 1px solid #e2e8f0; margin-bottom: 8px; }
+        .notification-list { list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; }
+        .notification-item { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; }
+        .notification-item:last-child { border-bottom: none; }
+        .notification-title { font-size: 13px; font-weight: 700; color: #0f172a; }
+        .notification-subtitle { font-size: 12px; color: #475569; margin-top: 2px; }
+        .notification-time { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .notification-empty { padding: 12px 14px; font-size: 13px; color: #64748b; }
+        @media (max-width: 768px) { .top-header { flex-direction: column; align-items: flex-start; gap: 12px; } .header-right { width: 100%; display: flex; justify-content: space-between; align-items: center; } }
     </style>
 </head>
 <body>
@@ -87,9 +120,32 @@ if ($log_query) {
             <h2 style="margin: 0; font-size: 24px; color: #fff;">Welcome back, <?php echo ucfirst(strtolower($user_role)) . ' ' . htmlspecialchars($user_name); ?>.</h2>
             <p style="margin: 5px 0 0 0; color: #a3b8b5; font-size: 14px;">Current Login Time: <?php echo $current_time; ?></p>
         </div>
-        <div style="text-align: right;">
+        <div class="header-right" style="text-align: right; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end;">
             <div style="font-weight: 600; font-size: 14px; background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px;"><?php echo $today_date; ?></div>
-            <span class="role-badge" style="background: #e0f2fe; color: #0369a1; margin-top: 10px; display: inline-block;">NURSE PORTAL</span>
+            <div class="notification-wrapper">
+                <button type="button" class="notification-bell" id="notificationBell" aria-expanded="false" aria-controls="notificationDropdown">🔔 <span class="bell-badge"><?php echo $meds_pending; ?></span></button>
+                <div class="notification-dropdown" id="notificationDropdown" aria-hidden="true">
+                    <div class="notification-header">Today's Medication Alerts</div>
+                    <?php if (!empty($alerts)): ?>
+                        <ul class="notification-list">
+                            <?php foreach ($alerts as $resident_name => $resident_alerts): ?>
+                                <?php foreach ($resident_alerts as $index => $alert): ?>
+                                    <li class="notification-item">
+                                        <?php if ($index === 0): ?>
+                                            <div class="notification-title"><?php echo htmlspecialchars($resident_name); ?></div>
+                                        <?php endif; ?>
+                                        <div class="notification-subtitle"><?php echo htmlspecialchars($alert['medicine_name'] ?? '-'); ?></div>
+                                        <div class="notification-time"><?php echo date('h:i A', strtotime($alert['time'])); ?></div>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <div class="notification-empty">No medication alerts for today.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <span class="role-badge" style="background: #e0f2fe; color: #0369a1; display: inline-block;">NURSE PORTAL</span>
         </div>
     </div>
 
@@ -207,5 +263,30 @@ if ($log_query) {
     </footer>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bell = document.getElementById('notificationBell');
+        const dropdown = document.getElementById('notificationDropdown');
+
+        if (!bell || !dropdown) {
+            return;
+        }
+
+        bell.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const isOpen = dropdown.classList.toggle('is-open');
+            bell.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            dropdown.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
+                dropdown.classList.remove('is-open');
+                bell.setAttribute('aria-expanded', 'false');
+                dropdown.setAttribute('aria-hidden', 'true');
+            }
+        });
+    });
+</script>
 </body>
 </html>
