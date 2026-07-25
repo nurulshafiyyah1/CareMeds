@@ -1,0 +1,376 @@
+/* css/add_medicine.css */
+
+/* System Core & Colors Definition — Imported from dashboard.css */
+:root {
+    --bg-main: #f4f9f6;
+    --sidebar-bg: #1b4332;
+    --sidebar-hover: #2d6a4f;
+    --primary: #2d6a4f;
+    --text-main: #1b1b1b;
+    --text-muted: #666666;
+    --white: #ffffff;
+    --border: #e2ede7;
+    
+    --green-glowing: #eef7f2;
+    --orange-glowing: #fff8eb;
+    --red-glowing: #ffeef0;
+    --red-text: #d90429;
+    --orange-text: #f77f00;
+}
+
+/* System Core & Reset Styling */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.dashboard-container {
+    display: flex;
+    width: 100%;
+}
+
+/* ==========================================
+   SIDEBAR STYLE — Matched exactly to dashboard.css
+   ========================================== */
+.sidebar {
+    width: 270px;
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 35px 20px;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-brand {
+    color: var(--white);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background-color: rgba(255,255,255,0.1);
+    margin: 25px 0;
+}
+
+.sidebar-menu {
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin-bottom: 8px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #b7e4c7;
+    text-decoration: none;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-weight: 600; /* Made bold to match your requirement */
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-menu a:hover, 
+.sidebar-menu a.active {
+    background-color: var(--sidebar-hover);
+    color: var(--white);
+    font-weight: 600;
+}
+
+/* Logout Item — Styled identically to standard links */
+.sidebar-menu .logout-item {
+    margin-top: 30px;
+}
+
+.sidebar-menu .logout-item a {
+    color: #b7e4c7;
+    font-weight: 600;
+}
+
+.sidebar-menu .logout-item a:hover {
+    background-color: var(--sidebar-hover);
+    color: var(--white);
+}
+
+/* ==========================================
+   MAIN CONTENT WORKSPACE
+   ========================================== */
+.main-content {
+    margin-left: 270px;
+    width: calc(100% - 270px);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.top-navbar {
+    background: var(--white);
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-info h1 {
+    font-size: 1.15rem;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.sub-page-title {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.badge-admin {
+    background: #d8f3dc;
+    color: var(--sidebar-bg);
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.content-body {
+    padding: 40px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.med-form-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    width: 100%;
+    max-width: 650px;
+    padding: 30px;
+    border: 1px solid var(--border);
+}
+
+.card-header {
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 15px;
+}
+
+.card-header h3 {
+    font-size: 1.25rem;
+    color: var(--sidebar-bg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+
+/* ==========================================
+   INPUT STYLING & REGISTRATION FORMS
+   ========================================== */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #334155;
+    font-size: 0.9rem;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    outline: none;
+    transition: border 0.2s;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    border-color: var(--sidebar-bg);
+    box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+}
+
+/* System Response Indicators */
+.system-alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.system-alert.success {
+    background: #dcfce7;
+    color: #15803d;
+    border-left: 5px solid #22c55e;
+}
+
+.system-alert.error {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-left: 5px solid #ef4444;
+}
+
+/* ==========================================
+   FOOTER ACTIONS
+   ========================================== */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+.btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+.btn-save {
+    background: var(--sidebar-bg);
+    color: var(--white);
+    border: none;
+    padding: 12px 26px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-save:hover {
+    background: #143225;
+}
+
+/* ==========================================================================
+   PORTAL FOOTER ARCHITECTURE
+   ========================================================================== */
+.portal-footer {
+    background-color: #1b4332; /* Matches var(--sidebar-bg) */
+    padding: 20px 50px;
+    border-radius: 0;
+    margin-top: 60px;
+    margin-left: -50px;   /* Counters the parent element padding */
+    margin-right: -50px;  /* Counters the parent element padding */
+    margin-bottom: -45px; /* Pulls footer clean to bottom base boundary */
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.portal-footer-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.portal-footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.portal-footer-logo span {
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.portal-footer-copy {
+    color: #a3b8b5;
+    font-size: 13px;
+    margin: 0;
+}
+
+.portal-footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.portal-footer-links a {
+    color: #a3b8b5;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.portal-footer-links a:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .portal-footer-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+}
