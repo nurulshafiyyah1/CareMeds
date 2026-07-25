@@ -151,13 +151,13 @@ foreach ($scheduled_items as $item) {
 </div>
 
 <div class="main-content">
-    <div class="top-header">
+    <div class="top-header" style="background: linear-gradient(135deg, #1e3d37 0%, #0f201d 100%); padding: 30px; border-radius: 16px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
         <div class="welcome-text">
-            <h2>Medication Administration</h2>
-            <p>Record whether each resident's medicine was given, not given, or not applicable. Schedules remain active for 24 hours before they need to be refreshed for the next day.</p>
+            <h2 style="margin: 0; font-size: 24px; color: #fff;">Medication Administration</h2>
+            <p style="margin: 5px 0 0 0; color: #a3b8b5; font-size: 14px;">Record whether each resident's medicine was given, not given, or not applicable. Schedules remain active for 24 hours before they need to be refreshed for the next day.</p>
         </div>
-        <div class="header-right">
-            <span class="role-badge" style="background: #e0f2fe; color: #0369a1;">NURSE PORTAL</span>
+        <div style="text-align: right;">
+            <span class="role-badge" style="background: #e0f2fe; color: #0369a1; margin-top: 10px; display: inline-block;">NURSE PORTAL</span>
         </div>
     </div>
 
