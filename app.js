@@ -1,19 +1,8 @@
-/**
- * app.js
- * Client-side script for CAREMEDS Hospital Appointment Management System
- * Handles client-side UX: modals, multi-step wizards, auto-fills, edit actions, and print actions
- */
-
-// ==========================================================================
-// WIZARD FORM MULTI-STEP NAVIGATION (ADD APPOINTMENT)
-// ==========================================================================
-
 let activeFormTab = "tab-patient";
 
 function switchFormTab(tabId) {
     activeFormTab = tabId;
     
-    // Toggle active tab header buttons
     document.querySelectorAll(".form-tab-btn").forEach(btn => {
         if (btn.getAttribute("data-tab") === tabId) {
             btn.classList.add("active");
@@ -22,7 +11,6 @@ function switchFormTab(tabId) {
         }
     });
 
-    // Toggle active tab content body
     document.querySelectorAll(".form-tab-content").forEach(content => {
         if (content.id === tabId) {
             content.classList.add("active");
@@ -31,7 +19,6 @@ function switchFormTab(tabId) {
         }
     });
 
-    // Manage Wizard footer buttons
     const prevBtn = document.getElementById("btn-form-prev");
     const nextBtn = document.getElementById("btn-form-next");
     const saveBtn = document.getElementById("btn-save-record");
@@ -53,7 +40,6 @@ function switchFormTab(tabId) {
     }
 }
 
-// Validate fields of a single tab
 function validateTabInputs(tabId) {
     let isValid = true;
 
@@ -108,7 +94,6 @@ function validateTabInputs(tabId) {
     return isValid;
 }
 
-// Auto-fill patient properties upon name change (Add Modal)
 const patientInput = document.getElementById("form-patient-name");
 if (patientInput) {
     patientInput.addEventListener("input", (e) => {
@@ -133,7 +118,6 @@ if (patientInput) {
     });
 }
 
-// Auto-fill patient properties upon name change (Edit Modal)
 const editPatientInput = document.getElementById("edit-patient-name");
 if (editPatientInput) {
     editPatientInput.addEventListener("input", (e) => {
@@ -153,7 +137,6 @@ if (editPatientInput) {
     });
 }
 
-// Tab headers navigation click
 document.querySelectorAll(".form-tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         const targetTab = btn.getAttribute("data-tab");
@@ -171,7 +154,6 @@ document.querySelectorAll(".form-tab-btn").forEach(btn => {
     });
 });
 
-// Wizard Next / Prev Buttons
 const nextFormBtn = document.getElementById("btn-form-next");
 if (nextFormBtn) {
     nextFormBtn.addEventListener("click", () => {
@@ -198,7 +180,6 @@ if (prevFormBtn) {
     });
 }
 
-// Save Appointment Form Submit Handler
 const healthForm = document.getElementById("health-record-form");
 if (healthForm) {
     healthForm.addEventListener("submit", (e) => {
@@ -224,7 +205,6 @@ if (healthForm) {
     });
 }
 
-// Add Modal toggles
 const addModal = document.getElementById("add-record-modal");
 const openAddBtnTable = document.getElementById("btn-add-record-table");
 const closeAddBtn = document.getElementById("btn-close-add-modal");
@@ -232,8 +212,7 @@ const cancelAddBtn = document.getElementById("btn-cancel-record");
 
 function openAddModalHandler() {
     if (healthForm) healthForm.reset();
-    
-    // Clear autofill inputs
+
     const inputsToClear = [
         "form-patient-name", "form-patient-id", "form-patient-age", 
         "form-patient-gender", "form-patient-contact", "form-patient-allergies", 
@@ -245,7 +224,6 @@ function openAddModalHandler() {
         if (el) el.value = "";
     });
 
-    // Clear validation highlights
     document.querySelectorAll(".form-group").forEach(el => el.classList.remove("invalid"));
 
     switchFormTab("tab-patient");
@@ -261,9 +239,6 @@ if (openAddBtnTable) openAddBtnTable.addEventListener("click", openAddModalHandl
 if (closeAddBtn) closeAddBtn.addEventListener("click", closeAddModalHandler);
 if (cancelAddBtn) cancelAddBtn.addEventListener("click", closeAddModalHandler);
 
-// ==========================================================================
-// EDIT MODAL ACTIONS
-// ==========================================================================
 const editModal = document.getElementById("edit-record-modal");
 const closeEditBtn = document.getElementById("btn-close-edit-modal");
 const cancelEditBtn = document.getElementById("btn-cancel-edit-record");
@@ -279,7 +254,6 @@ document.querySelectorAll(".btn-edit-appointment").forEach(btn => {
     btn.addEventListener("click", (e) => {
         e.preventDefault();
         
-        // Fill out all fields using the data attributes
         document.getElementById("edit-appointment-id").value = btn.getAttribute("data-appointment-id");
         document.getElementById("edit-patient-name").value = btn.getAttribute("data-patient-name");
         document.getElementById("edit-patient-id").value = btn.getAttribute("data-patient-id");
@@ -299,21 +273,15 @@ document.querySelectorAll(".btn-edit-appointment").forEach(btn => {
         document.getElementById("edit-nurse").value = btn.getAttribute("data-nurse-id");
         document.getElementById("edit-notes").value = btn.getAttribute("data-notes");
 
-        // Clear validation highlights
         document.querySelectorAll("#edit-record-modal .form-group").forEach(el => el.classList.remove("invalid"));
 
-        // Show the Edit Modal
         if (editModal) editModal.classList.remove("hidden");
         lucide.createIcons();
     });
 });
 
-// ==========================================================================
-// VIEW MODAL TAB NAVIGATION
-// ==========================================================================
 
 function switchViewModalTab(tabId) {
-    // Tab headers
     document.querySelectorAll(".view-tab-btn").forEach(btn => {
         if (btn.getAttribute("data-view-tab") === tabId) {
             btn.classList.add("active");
@@ -321,8 +289,7 @@ function switchViewModalTab(tabId) {
             btn.classList.remove("active");
         }
     });
-
-    // Tab contents
+    
     document.querySelectorAll(".view-tab-content").forEach(content => {
         if (content.id === tabId) {
             content.classList.add("active");
@@ -338,11 +305,6 @@ document.querySelectorAll(".view-tab-btn").forEach(btn => {
         switchViewModalTab(tabId);
     });
 });
-
-
-// ==========================================================================
-// THEME SWITCHER LOGIC
-// ==========================================================================
 
 function toggleTheme() {
     const html = document.documentElement;
@@ -363,15 +325,9 @@ if (themeBtn) {
     themeBtn.addEventListener("click", toggleTheme);
 }
 
-
-// ==========================================================================
-// APP INITIALIZATION
-// ==========================================================================
-
 window.addEventListener("DOMContentLoaded", () => {
     initTheme();
     
-    // Set formatted header date
     const displayDateElement = document.getElementById("current-date-display");
     if (displayDateElement) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -379,7 +335,6 @@ window.addEventListener("DOMContentLoaded", () => {
         displayDateElement.textContent = dateObj.toLocaleDateString('en-US', options);
     }
     
-    // Process URL notifications or parameters
     const urlParams = new URLSearchParams(window.location.search);
     let shouldCleanUrl = false;
     
@@ -398,8 +353,7 @@ window.addEventListener("DOMContentLoaded", () => {
     } else if (urlParams.get('success_note') === '1') {
         shouldCleanUrl = true;
     }
-    
-    // Clear URL parameters to clean up address bar
+
     if (shouldCleanUrl) {
         const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
         const hash = window.location.hash;
